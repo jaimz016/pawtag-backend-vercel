@@ -1,24 +1,29 @@
-# Start from a Python base image
+# Use official Python runtime as base image
 FROM python:3.11-slim
 
-# Install OS dependencies for OpenCV
-RUN apt-get update && apt-get install -y \
-    libgl1 \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
+# Set working directory in the container
 WORKDIR /app
 
-# Copy project files
-COPY . .
+# Install system dependencies required for OpenCV
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements file first (for better Docker caching)
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port
+# Copy the rest of your application code
+COPY . .
+
+# Expose port 8000 for FastAPI
 EXPOSE 8000
 
-# Start the FastAPI server
+# Command to run the application
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
