@@ -1,9 +1,4 @@
 fastapi==0.104.1
 uvicorn==0.24.0
-opencv-python-headless==4.5.5.64  # Older, smaller version
 numpy==1.26.4
-scikit-learn==1.3.2
 firebase-admin==6.2.0
-google-cloud-storage==2.13.0
-python-multipart==0.0.6
-pillow==10.1.0
